@@ -1,4 +1,4 @@
-Fibonacci Sequence calculation application by Christiaan Theron
+Fibonacci Sequence calculation application by Chris Theron
 
 The original development brief was:
     //Write a C# application that returns the nth number in the Fibonacci sequence. 
