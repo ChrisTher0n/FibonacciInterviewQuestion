@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 
 namespace FibonacciSequenceCalculator
 {
@@ -11,7 +10,7 @@ namespace FibonacciSequenceCalculator
         /// <summary>
         /// IComputFib interface method
         /// </summary>
-        BigInteger ComputeFib(int seqNum);
+        double ComputeFib(int seqNum);
     }
 
     /// <summary>
@@ -23,11 +22,11 @@ namespace FibonacciSequenceCalculator
         /// Fibonacci calculation using Recursive method
         /// </summary>
         /// <param name="seqNum">Number in Sequence to find</param>
-        /// <returns>A UInt64 containing requested position in Fibonacci sequence </returns>
-        public BigInteger ComputeFib(int seqNum)
+        /// <returns>A double containing requested position in Fibonacci sequence </returns>
+        public double ComputeFib(int seqNum)
         {
             if (seqNum <= 1)
-                return (BigInteger)seqNum;
+                return seqNum;
             return ComputeFib(seqNum - 1) + ComputeFib(seqNum - 2);
         }
     }
@@ -41,13 +40,13 @@ namespace FibonacciSequenceCalculator
         /// Fibonacci calculation using Iterative method
         /// </summary>
         /// <param name="seqNum">Number in Sequence to find</param>
-        /// <returns>A BigInteger containing requested position in Fibonacci sequence </returns>
-        public BigInteger ComputeFib(int seqNum)
+        /// <returns>A double containing requested position in Fibonacci sequence </returns>
+        public double ComputeFib(int seqNum)
         {
-            BigInteger firstNum = 0, secondNum = 1, result = 0;
+            double firstNum = 0, secondNum = 1, result = 0;
 
             if (seqNum == 0 || seqNum == 1)
-                return (BigInteger)seqNum;
+                return seqNum;
 
             //Loop through sequence to requested number
             for (int i = 2; i <= seqNum; i++)

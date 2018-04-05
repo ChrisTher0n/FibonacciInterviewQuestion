@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Numerics;
 using System.Diagnostics;
+//using System.Threading;
+using System.ComponentModel;
 
 namespace FibonacciSequenceCalculator
 {
@@ -26,11 +29,18 @@ namespace FibonacciSequenceCalculator
                     return;
                 }
 
-                //Return type from ComputeFibNum has been arbitrarily set to double as a design exercise in limiting program scale and complexity
-                if (requiredNum > 1476) //Max Fibonacci sequence number that can fit in a double
+                //Return type from ComputeFibNum has been set to BigInteger so it could concievably handle infinite digits.
+                //But as a design exercise to limiting runtime of program to reasonable amount of time limit has been artificailly set at 5000.
+                //User will be prompted to confirm they really need a number calculater with in excess of 1045 digits
+                if (requiredNum > 5000) //Max Fibonacci sequence number that can fit in a double
                 {
-                    Console.WriteLine("Please select sequence number smaller than 1476. Output will exceed size of Double ");
-                    return;
+                    Console.WriteLine("You are about to compute a fairly large number and it may take some time to complete. Continue? Y/N");
+                    ConsoleKeyInfo input = Console.ReadKey();
+
+                    if (input.Key != ConsoleKey.Y)
+                    {
+                        return;
+                    }    
                 }
 
             }
@@ -50,10 +60,11 @@ namespace FibonacciSequenceCalculator
             //Do it iteratively...much faster
             IComputeFib compFibIter = new ComputeFibNumIteratively();
             TimedComp getSeqNum = new TimedComp(compFibIter, requiredNum);
-            
-            //Execute main task
-            Console.WriteLine("The {0}{1} Fibonacci sequence number is : {2}", requiredNum, CorrectOrdinal(requiredNum), getSeqNum.TimedComputation());
-            Console.ReadLine();
+
+            Console.Write("The {0}{1} Fibonacci sequence number is : {2}", requiredNum, CorrectOrdinal(requiredNum), getSeqNum.TimedComputation());
+            //Compute Fib number asynchronously and print it out
+            //getSeqNum.TimedComputation();
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -81,7 +92,9 @@ namespace FibonacciSequenceCalculator
         
         private int sequenceNum;
         private IComputeFib timedCompute;
-        
+        private BackgroundWorker worker = new BackgroundWorker();
+        private double timeSpan;
+
         /// <summary>
         /// Public constructor for TimedComp class
         /// </summary>
@@ -93,17 +106,50 @@ namespace FibonacciSequenceCalculator
             sequenceNum = seqNum;
         }
 
+        /// <summary>
+        /// Inititialization of Backgroundworker
+        /// </summary>
         
+        /*
+        public void InitBackgroundWorker()
+        {
+            worker.DoWork += new DoWorkEventHandler(WorkerDoWork);
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(WorkerCompleted);
+        }
 
-        /// <summary>Simple method using very rudimentary Dependency injection (Yes I realise this is complete overkill...but I mean...a Fibonacci sequence...I had to throw SOMETHING in here.)
+        private void WorkerDoWork(object sender, DoWorkEventArgs args)
+        {
+            args.Result = InternalTimedComputation();
+        }
+
+        private void WorkerCompleted(object sender, RunWorkerCompletedEventArgs args)
+        {
+            Console.Write($"{args.Result}");
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"Excecution took {timeSpan} milliseconds");
+        }
+
+        public void TimedComputation()
+        {
+            InitBackgroundWorker();
+            worker.RunWorkerAsync();
+        }
+
+        */
+
+        /// <summary>Simple method using very rudimentary Dependency injection through use of IComputeFib interface insctance being passed in and used.
         /// Also measures the execution time in miliseconds. Useful for algorithm tweaking.
         /// </summary>
         /// <param name="comp">IComputeFib instance to compute seq with</param>
         /// <param name="seqNum">Number in Sequence to find</param>
         /// <returns>A double containing requested position in Fibonacci sequence </returns>
-        public double TimedComputation()
+        //private UInt64 InternalTimedComputation()
+
+        public BigInteger TimedComputation()
         {
-            double fibNum = 0;
+            BigInteger fibNum = 0;
             //For monitoring execution times
             Stopwatch sw = Stopwatch.StartNew();
 
@@ -119,8 +165,7 @@ namespace FibonacciSequenceCalculator
             }
             
             sw.Stop();
-            Console.WriteLine();
-            Console.WriteLine("Excecution took {0} milliseconds", sw.Elapsed.TotalMilliseconds);
+            timeSpan = sw.Elapsed.TotalMilliseconds;
 
             return fibNum;
         }
