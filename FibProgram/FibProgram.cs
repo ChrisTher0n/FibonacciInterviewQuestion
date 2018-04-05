@@ -61,9 +61,10 @@ namespace FibonacciSequenceCalculator
             IComputeFib compFibIter = new ComputeFibNumIteratively();
             TimedComp getSeqNum = new TimedComp(compFibIter, requiredNum);
 
-            Console.Write("The {0}{1} Fibonacci sequence number is : {2}", requiredNum, CorrectOrdinal(requiredNum), getSeqNum.TimedComputation());
-            //Compute Fib number asynchronously and print it out
-            //getSeqNum.TimedComputation();
+            Console.Write("The {0}{1} Fibonacci sequence number is : ", requiredNum, CorrectOrdinal(requiredNum));
+            //Compute Fib number asynchronously using a BackgroundWorker and print it out
+            getSeqNum.TimedComputation();
+
             Console.ReadKey();
         }
 
@@ -110,7 +111,7 @@ namespace FibonacciSequenceCalculator
         /// Inititialization of Backgroundworker
         /// </summary>
         
-        /*
+        
         public void InitBackgroundWorker()
         {
             worker.DoWork += new DoWorkEventHandler(WorkerDoWork);
@@ -137,17 +138,17 @@ namespace FibonacciSequenceCalculator
             worker.RunWorkerAsync();
         }
 
-        */
+        
 
         /// <summary>Simple method using very rudimentary Dependency injection through use of IComputeFib interface insctance being passed in and used.
         /// Also measures the execution time in miliseconds. Useful for algorithm tweaking.
         /// </summary>
         /// <param name="comp">IComputeFib instance to compute seq with</param>
         /// <param name="seqNum">Number in Sequence to find</param>
-        /// <returns>A double containing requested position in Fibonacci sequence </returns>
-        //private UInt64 InternalTimedComputation()
+        /// <returns>A BigInteger containing requested position in Fibonacci sequence </returns>
+        private BigInteger InternalTimedComputation()
 
-        public BigInteger TimedComputation()
+        //public BigInteger TimedComputation()
         {
             BigInteger fibNum = 0;
             //For monitoring execution times
